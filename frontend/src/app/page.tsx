@@ -1,48 +1,80 @@
-export default function Home() {
-  return (
-    <main className="min-h-screen bg-slate-100 flex items-center justify-center">
-      <div className="w-full max-w-3xl bg-white rounded-xl shadow-lg p-8">
+"use client";
 
-        <h1 className="text-4xl font-bold text-center mb-2">
+import { useState } from "react";
+import api from "@/lib/api";
+
+export default function Home() {
+  const [file, setFile] = useState<File | null>(null);
+  const [resumeData, setResumeData] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function uploadResume() {
+    if (!file) {
+      alert("Please choose a resume.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setLoading(true);
+
+      const response = await api.post("/api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setResumeData(response.data.data);
+    } catch (error) {
+      console.error(error);
+      alert("Upload failed.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <main className="min-h-screen bg-slate-100 flex justify-center p-10">
+      <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-8">
+
+        <h1 className="text-4xl font-bold text-center">
           ResumePilot AI
         </h1>
 
-        <p className="text-center text-gray-500 mb-8">
+        <p className="text-center text-gray-500 mt-2 mb-8">
           AI Powered ATS Resume Builder
         </p>
 
-        <div className="space-y-6">
+        <input
+          type="file"
+          onChange={(e) =>
+            setFile(e.target.files ? e.target.files[0] : null)
+          }
+          className="mb-5"
+        />
 
-          <div>
-            <label className="block font-semibold mb-2">
-              Upload Resume
-            </label>
+        <button
+          onClick={uploadResume}
+          className="bg-black text-white px-6 py-3 rounded-lg"
+        >
+          {loading ? "Uploading..." : "Upload Resume"}
+        </button>
 
-            <input
-              type="file"
-              className="w-full border rounded-lg p-3"
-            />
+        {resumeData && (
+          <div className="mt-10 border rounded-lg p-6">
+
+            <h2 className="text-2xl font-bold mb-4">
+              Parsed Resume
+            </h2>
+
+            <pre className="overflow-auto text-sm">
+              {JSON.stringify(resumeData, null, 2)}
+            </pre>
+
           </div>
-
-          <div>
-            <label className="block font-semibold mb-2">
-              Job Description
-            </label>
-
-            <textarea
-              rows={10}
-              className="w-full border rounded-lg p-3"
-              placeholder="Paste Job Description here..."
-            />
-          </div>
-
-          <button
-            className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition"
-          >
-            Generate ATS Resume
-          </button>
-
-        </div>
+        )}
 
       </div>
     </main>
