@@ -3,6 +3,7 @@ from app.utils.regex_utils import (
     extract_email,
     extract_phone,
     extract_location,
+    extract_skills,
 )
 
 
@@ -23,6 +24,8 @@ class ResumeService:
 
                 "location": extract_location(text)
 
-            }
+            },
+
+            "skills": extract_skills(text)
 
         }
