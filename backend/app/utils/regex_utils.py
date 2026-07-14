@@ -196,3 +196,42 @@ def extract_experience(text: str):
                 experience.append(current)
 
     return experience
+
+def extract_projects(text: str):
+
+    projects = []
+
+    lines = text.split("\n")
+
+    inside_projects = False
+    current = {}
+
+    for line in lines:
+
+        line = line.strip()
+
+        if "PROJECTS" in line.upper():
+            inside_projects = True
+            continue
+
+        if "EDUCATION" in line.upper():
+            break
+
+        if inside_projects:
+
+            if line and not line.startswith("•") and "Technologies" not in line:
+                current = {
+                    "title": line,
+                    "technologies": []
+                }
+
+            elif "Technologies" in line:
+                tech = line.replace("Technologies:", "").strip()
+
+                current["technologies"] = [
+                    x.strip() for x in tech.split(",")
+                ]
+
+                projects.append(current)
+
+    return projects

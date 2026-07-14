@@ -5,7 +5,8 @@ from app.utils.regex_utils import (
     extract_location,
     extract_skills,
     extract_education,
-    extract_experience
+    extract_experience,
+    extract_projects
 )
 
 
@@ -32,6 +33,8 @@ class ResumeService:
 
     "education": extract_education(text),
 
-    "experience": extract_experience(text)
+    "experience": extract_experience(text),
+
+    "projects": extract_projects(text)
 
 }
