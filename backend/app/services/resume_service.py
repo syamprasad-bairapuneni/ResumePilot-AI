@@ -4,6 +4,8 @@ from app.utils.regex_utils import (
     extract_phone,
     extract_location,
     extract_skills,
+    extract_education,
+    extract_experience
 )
 
 
@@ -14,18 +16,22 @@ class ResumeService:
 
         return {
 
-            "personal_info": {
+    "personal_info": {
 
-                "name": extract_name(text),
+        "name": extract_name(text),
 
-                "email": extract_email(text),
+        "email": extract_email(text),
 
-                "phone": extract_phone(text),
+        "phone": extract_phone(text),
 
-                "location": extract_location(text)
+        "location": extract_location(text)
 
-            },
+    },
 
-            "skills": extract_skills(text)
+    "skills": extract_skills(text),
 
-        }
+    "education": extract_education(text),
+
+    "experience": extract_experience(text)
+
+}
