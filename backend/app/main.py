@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.upload import router as upload_router
+from app.api.jd import router as jd_router
 
 app = FastAPI(
     title="ResumePilot AI",
@@ -22,11 +23,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Routers
+# Resume Routes
 app.include_router(
     upload_router,
     prefix="/api",
     tags=["Resume"]
+)
+
+# Job Description Routes
+app.include_router(
+    jd_router,
+    prefix="/api/jd",
+    tags=["Job Description"]
 )
 
 # Root Endpoint
